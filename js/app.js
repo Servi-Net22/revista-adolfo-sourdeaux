@@ -795,31 +795,48 @@
         .join("") +
       '</select></div><div id="lista" class="grid-cards"></div></div>';
 
+    bindProfesionalesLista("q", "rubro", "lista");
+  }
+
+  function bindProfesionalesLista(qId, rubroId, listaId) {
     function paint() {
-      const q = document.getElementById("q").value.toLowerCase();
-      const r = document.getElementById("rubro").value;
+      const q = document.getElementById(qId).value.toLowerCase();
+      const r = document.getElementById(rubroId).value;
       const items = D.profesionales.filter(function (p) {
         return (!r || p.rubro === r) && coincide(p, q);
       });
-      document.getElementById("lista").innerHTML = items.length
+      document.getElementById(listaId).innerHTML = items.length
         ? items.map(proCard).join("")
         : '<div class="empty">Nadie coincide. Probá otra palabra o publicá tu ficha.</div>';
     }
-    document.getElementById("q").addEventListener("input", paint);
-    document.getElementById("rubro").addEventListener("change", paint);
+    document.getElementById(qId).addEventListener("input", paint);
+    document.getElementById(rubroId).addEventListener("change", paint);
     paint();
   }
 
   function renderClasificados() {
     const root = document.getElementById("page");
     const tipos = unique(D.clasificados, "tipo");
+    const rubros = unique(D.profesionales, "rubro");
     root.innerHTML =
-      '<div class="wrap page-hero"><p class="kicker">Avisos de vecinos</p><h1>Clasificados</h1><p>Como en el papel: recuadros de distintos tamaños y valores. Arriba, la página de avisos. Abajo, los clasificados de vecinos.</p>' +
-      '<div class="actions"><a class="btn btn-ink" href="contacto.html">Publicar un clasificado</a></div></div>' +
+      '<div class="wrap page-hero"><p class="kicker">Avisos del Km 30</p><h1>Clasificados y profesionales</h1><p>Como en el papel: primero la grilla de avisos, después la página de profesionales y, al final, los clasificados de vecinos.</p>' +
+      '<div class="actions"><a class="btn" href="profesionales.html">Buscador de profesionales</a><a class="btn btn-ink" href="contacto.html">Publicar un aviso</a></div></div>' +
       '<div class="wrap">' +
       avisosMosaico("clasificados", "Grilla de avisos") +
       "</div>" +
-      '<div class="wrap section"><div class="filters"><select id="tipo"><option value="">Todos</option>' +
+      '<div class="wrap">' +
+      avisosMosaico("profesionales", "Página de profesionales") +
+      "</div>" +
+      '<div class="wrap section"><div class="section-head"><h2>Profesionales del barrio</h2><a href="profesionales.html">Ver todos</a></div><div class="filters">' +
+      '<input id="pros-q" type="search" placeholder="Buscar por nombre, oficio o zona">' +
+      '<select id="pros-rubro"><option value="">Todas las categorías</option>' +
+      rubros
+        .map(function (r) {
+          return "<option>" + r + "</option>";
+        })
+        .join("") +
+      '</select></div><div id="pros-lista" class="grid-cards"></div></div>' +
+      '<div class="wrap section"><div class="section-head"><h2>Clasificados de vecinos</h2><a href="contacto.html">Publicar</a></div><div class="filters"><select id="tipo"><option value="">Todos</option>' +
       tipos
         .map(function (t) {
           return "<option>" + t + "</option>";
@@ -852,6 +869,7 @@
     }
     document.getElementById("tipo").addEventListener("change", paint);
     paint();
+    bindProfesionalesLista("pros-q", "pros-rubro", "pros-lista");
   }
 
   function renderEventos() {

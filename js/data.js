@@ -58,7 +58,7 @@ window.REVISTA_DATA = {
     {
       id: "clasificados",
       nombre: "Clasificados",
-      desc: "Avisos de vecinos, alquileres y servicios.",
+      desc: "Avisos, profesionales y clasificados de vecinos.",
       href: "clasificados.html",
     },
     {
