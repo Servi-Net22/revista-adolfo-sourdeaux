@@ -124,8 +124,8 @@ window.REVISTA_DATA = {
         "La Unidad Sanitaria Km 30 está en Rosario. En la misma calle hay consultorios odontológicos. El buscador solo lista fichas con domicilio publicado.",
       cuerpo: [
         "La atención pública del barrio pasa por la Unidad Sanitaria Km 30 / Unidad Funcional Km 30, en Rosario 4472/4572, entre Portela y Rondeau. Es un centro municipal con atención diaria y especialidades. El municipio también readecuó el Centro de Salud ARA San Juan, en Rosario al 4400.",
-        "En el casco privado aparecen consultorios odontológicos con domicilio visible: Dental Ar Sourdeaux, Rosario 4680, y el Centro Odontológico Adriana Roel, Av. San Martín 319. Los teléfonos que publicamos salen de directorios y de las propias fichas de esos locales.",
-        "No cargamos médicos, contadores ni oficios sin una dirección o un teléfono que se pueda chequear. Si atendés en Sourdeaux, Villa de Mayo o Los Polvorines, mandá tu ficha: nombre, matrícula, zona y WhatsApp.",
+        "En oficios del barrio está Servi-Net: redes, WiFi, fibra, servidores, cámaras y soporte de PC, con WhatsApp 11 4030-6408. En el casco también hay consultorios odontológicos con domicilio visible: Dental Ar Sourdeaux, Rosario 4680, y el Centro Odontológico Adriana Roel, Av. San Martín 319.",
+        "Si atendés en Sourdeaux, Villa de Mayo o Los Polvorines, mandá tu ficha: nombre, matrícula, zona y WhatsApp.",
       ],
       autor: "Redacción SOURDEAUX",
       destacado: false,
@@ -166,6 +166,17 @@ window.REVISTA_DATA = {
   ],
 
   comercios: [
+    {
+      id: "servi-net-comercio",
+      nombre: "Servi-Net",
+      rubro: "Informática",
+      dest: true,
+      dir: "Adolfo Sourdeaux, Malvinas Argentinas",
+      horario: "A domicilio y por WhatsApp",
+      tel: "11 4030-6408",
+      wa: "5491140306408",
+      desc: "Redes, WiFi, fibra, servidores, cámaras y soporte de PC para casas y comercios del Km 30.",
+    },
     {
       id: "farmacia-alvarez",
       nombre: "Farmacia Álvarez",
@@ -298,6 +309,20 @@ window.REVISTA_DATA = {
 
   profesionales: [
     {
+      id: "servi-net",
+      nombre: "Servi-Net",
+      oficio: "Redes, informática y ciberseguridad",
+      rubro: "Oficios",
+      busca: "redes wifi camaras computadora informatica tecnico pc servidor ciberseguridad fibra router",
+      dest: true,
+      zona: "Adolfo Sourdeaux y Zona Norte",
+      dir: "Atención a domicilio en el Km 30 y Malvinas Argentinas",
+      mat: "servi-net.com.ar",
+      tel: "11 4030-6408",
+      wa: "5491140306408",
+      desc: "Redes cableadas y WiFi, fibra, servidores, cámaras, reparación de PC y soporte para comercios. WhatsApp de la casa.",
+    },
+    {
       id: "dental-ar",
       nombre: "Dental Ar Sourdeaux",
       oficio: "Odontología integral",
@@ -413,6 +438,7 @@ window.REVISTA_DATA = {
     { nombre: "Farmacia Álvarez", rubro: "Salud", tipo: "Portada" },
     { nombre: "Ferretería Bulonera Sourdeaux", rubro: "Hogar y oficio", tipo: "Destacado" },
     { nombre: "Hospital Veterinario Adolfo Sourdeaux", rubro: "Mascotas", tipo: "Destacado" },
+    { nombre: "Servi-Net", rubro: "Informática y redes", tipo: "Destacado" },
     { nombre: "Dental Ar Sourdeaux", rubro: "Profesionales", tipo: "Ficha" },
   ],
 };
