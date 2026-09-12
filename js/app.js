@@ -434,6 +434,26 @@
       "</div></section></div>";
   }
 
+  function contactRow(item, waText) {
+    var buttons = [];
+    if (item.wa) {
+      buttons.push(
+        '<a class="btn btn-wa" target="_blank" rel="noopener" href="' +
+          waLink(item.wa, waText) +
+          '">WhatsApp</a>'
+      );
+    }
+    if (item.tel) {
+      buttons.push(
+        '<a class="btn btn-line" href="tel:' + String(item.tel).replace(/\s/g, "") + '">Llamar</a>'
+      );
+    }
+    if (!buttons.length) {
+      return '<div class="meta">Sin teléfono publicado. Preguntá en el local.</div>';
+    }
+    return '<div class="wa-row">' + buttons.join("") + "</div>";
+  }
+
   function comercioCard(c) {
     return (
       '<article class="card">' +
@@ -447,15 +467,10 @@
       '<div class="meta">' +
       c.dir +
       "<br>" +
-      c.horario +
+      (c.horario || "Consultá horario en el local") +
       "</div>" +
-      '<div class="wa-row">' +
-      '<a class="btn btn-wa" target="_blank" rel="noopener" href="' +
-      waLink(c.wa, "Hola, los vi en " + C.nombre) +
-      '">WhatsApp</a>' +
-      '<a class="btn btn-line" href="tel:' +
-      c.tel.replace(/\s/g, "") +
-      '">Llamar</a></div></article>'
+      contactRow(c, "Hola, los vi en " + C.nombre) +
+      "</article>"
     );
   }
 
@@ -476,12 +491,10 @@
       "</p>" +
       '<div class="meta">' +
       p.dir +
-      " · " +
-      p.mat +
+      (p.mat ? " · " + p.mat : "") +
       "</div>" +
-      '<div class="wa-row"><a class="btn btn-wa" target="_blank" rel="noopener" href="' +
-      waLink(p.wa, "Hola " + p.nombre + ", te escribo por " + C.nombre) +
-      '">Pedir turno</a></div></article>'
+      contactRow(p, "Hola " + p.nombre + ", te escribo por " + C.nombre) +
+      "</article>"
     );
   }
 
@@ -622,21 +635,23 @@
       const items = D.clasificados.filter(function (c) {
         return !t || c.tipo === t;
       });
-      document.getElementById("lista").innerHTML = items
-        .map(function (c) {
-          return (
-            '<article class="card">' +
-            (c.dest ? '<span class="badge badge-hot">' + c.tipo + "</span>" : '<span class="badge">' + c.tipo + "</span>") +
-            "<h3>" +
-            c.titulo +
-            "</h3><p>" +
-            c.texto +
-            '</p><div class="meta">Contacto ' +
-            c.contacto +
-            "</div></article>"
-          );
-        })
-        .join("");
+      document.getElementById("lista").innerHTML = items.length
+        ? items
+            .map(function (c) {
+              return (
+                '<article class="card">' +
+                (c.dest ? '<span class="badge badge-hot">' + c.tipo + "</span>" : '<span class="badge">' + c.tipo + "</span>") +
+                "<h3>" +
+                c.titulo +
+                "</h3><p>" +
+                c.texto +
+                '</p><div class="meta">Contacto ' +
+                c.contacto +
+                "</div></article>"
+              );
+            })
+            .join("")
+        : '<div class="empty">Todavía no hay clasificados de vecinos. Publicá el tuyo.</div>';
     }
     document.getElementById("tipo").addEventListener("change", paint);
     paint();

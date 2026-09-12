@@ -14,7 +14,7 @@ window.REVISTA_CONFIG = {
   telefono: "(11) 1234-5678",
   suscribirUrl: "api/suscribir.php",
   anuncioPortada: {
-    nombre: "Farmacia Derqui",
-    texto: "Obra social, guardia y delivery en Adolfo Sourdeaux. Publicá el tuyo en la próxima edición.",
+    nombre: "Farmacia Álvarez",
+    texto: "Rosario 4605, Ing. Adolfo Sourdeaux. Obras sociales, medicamentos y perfumería. WhatsApp 11 2889-6715.",
   },
 };
