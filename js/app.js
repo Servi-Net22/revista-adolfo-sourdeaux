@@ -98,7 +98,8 @@
     if (aviso.tipo) label += " · " + aviso.tipo;
     if (aviso.ejemplo) label += " · Ejemplo";
     if (aviso.vacante) label += " · Disponible";
-    var cls = "ad";
+    var size = aviso.tamano || (aviso.imagen ? "banner" : "simple");
+    var cls = "ad ad-tam-" + size;
     if (aviso.imagen) cls += " ad-visual";
     if (aviso.ejemplo) cls += " ad-ejemplo";
     if (aviso.vacante) cls += " ad-vacante";
@@ -145,6 +146,31 @@
       featured.map(adCard).join("") +
       (rest.length ? '<div class="ad-grid">' + rest.map(adCard).join("") + "</div>" : "") +
       "</section>"
+    );
+  }
+
+  function avisosDeMosaico(pagina) {
+    return avisosList().filter(function (a) {
+      if (!a.mosaico) return false;
+      if (a.mosaico === true) return true;
+      if (typeof a.mosaico === "string") return a.mosaico === pagina;
+      return a.mosaico.indexOf(pagina) !== -1;
+    });
+  }
+
+  function avisosMosaico(pagina, title) {
+    var list = avisosDeMosaico(pagina);
+    if (!list.length) return "";
+    var head = title
+      ? '<div class="section-head"><h2>' + title + '</h2><a href="contacto.html">Reservar un espacio</a></div>'
+      : "";
+    return (
+      '<section class="section ad-section">' +
+      head +
+      '<p class="muted ad-mosaico-leyenda">Banner ancho, módulo doble y módulo simple. Los ejemplos muestran el formato; los disponibles se pueden pedir.</p>' +
+      '<div class="ad-mosaico">' +
+      list.map(adCard).join("") +
+      "</div></section>"
     );
   }
 
@@ -742,16 +768,18 @@
     const root = document.getElementById("page");
     const tipos = unique(D.clasificados, "tipo");
     root.innerHTML =
-      '<div class="wrap page-hero"><p class="kicker">Avisos de vecinos</p><h1>Clasificados</h1><p>Alquileres, ventas, empleos y servicios. Un aviso corto que se lee en el celular y se reenvía.</p>' +
+      '<div class="wrap page-hero"><p class="kicker">Avisos de vecinos</p><h1>Clasificados</h1><p>Alquileres, ventas, empleos y servicios. La grilla tiene tres tamaños: banner ancho, módulo doble y módulo simple.</p>' +
       '<div class="actions"><a class="btn btn-ink" href="contacto.html">Publicar un clasificado</a></div></div>' +
-      '<div class="wrap section"><div class="filters"><select id="tipo"><option value="">Todos</option>'
+      '<div class="wrap">' +
+      avisosMosaico("clasificados", "Grilla de avisos") +
+      "</div>" +
+      '<div class="wrap section"><div class="filters"><select id="tipo"><option value="">Todos</option>' +
       tipos
         .map(function (t) {
           return "<option>" + t + "</option>";
         })
         .join("") +
-      '</select></div><div id="lista" class="grid-cards"></div></div>' +
-      avisosWrapEjemplos("clasificados", "Espacios de clasificados");
+      '</select></div><div id="lista" class="grid-cards"></div></div>';
 
     function paint() {
       const t = document.getElementById("tipo").value;
@@ -810,8 +838,11 @@
     const root = document.getElementById("page");
     const url = abs("anunciantes.html");
     root.innerHTML =
-      '<div class="wrap page-hero"><p class="kicker">Para comercios y profesionales</p><h1>Anunciá donde el barrio reenvía</h1><p>Hay tres lugares de portada y un banner en cada sección. Abajo hay ejemplos reales del barrio y espacios libres para reservar.</p>' +
+      '<div class="wrap page-hero"><p class="kicker">Para comercios y profesionales</p><h1>Anunciá donde el barrio reenvía</h1><p>La grilla tiene tres tamaños: banner ancho, módulo doble y módulo simple. Abajo se ve cómo queda, con ejemplos del barrio y espacios libres.</p>' +
       shareSet("Quiero anunciar en " + C.nombre, url, "Paquetes para comercios y profesionales") +
+      "</div>" +
+      '<div class="wrap">' +
+      avisosMosaico("anunciantes", "Grilla de anunciantes") +
       "</div>" +
       '<div class="wrap section"><div class="grid-cards">' +
       D.paquetes
@@ -834,12 +865,6 @@
         })
         .join("") +
       "</div></div>" +
-      avisosWrapEjemplos("portada", "Portada") +
-      avisosWrapEjemplos("actualidad", "Actualidad") +
-      avisosWrapEjemplos("comercios", "Comercios") +
-      avisosWrapEjemplos("profesionales", "Profesionales") +
-      avisosWrap("clasificados", "Clasificados") +
-      avisosWrapEjemplos("eventos", "Agenda") +
       '<div class="wrap section"><div class="section-head"><h2>En esta edición anuncian</h2></div><div class="grid-4">' +
       D.anunciantes
         .map(function (a) {
