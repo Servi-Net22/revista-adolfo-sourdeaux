@@ -67,6 +67,128 @@
     );
   }
 
+  function avisosList() {
+    return D.avisos && D.avisos.length ? D.avisos : [];
+  }
+
+  function avisosBySlot(slot) {
+    return avisosList().filter(function (a) {
+      if (a.slots && a.slots.length) return a.slots.indexOf(slot) !== -1;
+      return a.slot === slot;
+    });
+  }
+
+  function avisosConImagen() {
+    return avisosList().filter(function (a) {
+      return a.imagen && !a.ejemplo;
+    });
+  }
+
+  function slotForSeccion(seccion) {
+    if (seccion === "comercios") return "comercios";
+    if (seccion === "profesionales") return "profesionales";
+    if (seccion === "eventos") return "eventos";
+    if (seccion === "barrio" || seccion === "actualidad") return "actualidad";
+    return "portada";
+  }
+
+  function adCard(aviso) {
+    if (!aviso) return "";
+    var label = "Espacio del anunciante";
+    if (aviso.tipo) label += " · " + aviso.tipo;
+    if (aviso.ejemplo) label += " · Ejemplo";
+    if (aviso.vacante) label += " · Disponible";
+    var cls = "ad";
+    if (aviso.imagen) cls += " ad-visual";
+    if (aviso.ejemplo) cls += " ad-ejemplo";
+    if (aviso.vacante) cls += " ad-vacante";
+    var body = "";
+    if (aviso.imagen) {
+      var img =
+        '<img src="' +
+        aviso.imagen +
+        '" alt="' +
+        (aviso.alt || aviso.nombre || "Aviso publicitario") +
+        '" width="591" height="284">';
+      body = aviso.href
+        ? '<a class="ad-visual-link" href="' + aviso.href + '" target="_blank" rel="noopener">' + img + "</a>"
+        : img;
+    } else {
+      body = "<strong>" + aviso.nombre + "</strong><p>" + (aviso.texto || "") + "</p>";
+      if (aviso.dato) body += '<div class="meta">' + aviso.dato + "</div>";
+      if (aviso.vacante || aviso.cta) {
+        body +=
+          '<div class="actions ad-cta"><a class="btn btn-ink" href="' +
+          (aviso.href || "contacto.html") +
+          '">' +
+          (aviso.cta || "Reservar este espacio") +
+          "</a></div>";
+      }
+    }
+    return '<article class="' + cls + '"><div class="ad-label">' + label + "</div>" + body + "</article>";
+  }
+
+  function avisosMarkup(list, title) {
+    if (!list || !list.length) return "";
+    var featured = list.filter(function (a) {
+      return a.imagen && !a.ejemplo;
+    });
+    var rest = list.filter(function (a) {
+      return featured.indexOf(a) === -1;
+    });
+    var head = title
+      ? '<div class="section-head"><h2>' + title + '</h2><a href="anunciantes.html">Quiero anunciar</a></div>'
+      : "";
+    return (
+      '<section class="section ad-section">' +
+      head +
+      featured.map(adCard).join("") +
+      (rest.length ? '<div class="ad-grid">' + rest.map(adCard).join("") + "</div>" : "") +
+      "</section>"
+    );
+  }
+
+  function avisosBand(slot, title) {
+    return avisosMarkup(avisosBySlot(slot), title);
+  }
+
+  function avisosWrap(slot, title) {
+    var html = avisosBand(slot, title);
+    return html ? '<div class="wrap">' + html + "</div>" : "";
+  }
+
+  function avisosWrapEjemplos(slot, title) {
+    return (
+      '<div class="wrap">' +
+      avisosMarkup(
+        avisosBySlot(slot).filter(function (a) {
+          return !a.imagen || a.ejemplo;
+        }),
+        title
+      ) +
+      "</div>"
+    );
+  }
+
+  function avisosSidebar(art) {
+    var list = avisosBySlot(slotForSeccion(art && art.seccion));
+    if (!list.length) list = avisosBySlot("portada");
+    return list.slice(0, 2).map(adCard).join("");
+  }
+
+  function editionAdAfter(i, art) {
+    if (i === 0) return avisosMarkup(avisosBySlot("portada"));
+    if (art.seccion === "comercios") return avisosMarkup(avisosBySlot("comercios"));
+    if (art.seccion === "profesionales") return avisosMarkup(avisosBySlot("profesionales"));
+    if (art.seccion === "eventos") return avisosMarkup(avisosBySlot("eventos"));
+    if (art.seccion === "barrio") return avisosMarkup(avisosBySlot("actualidad"));
+    return "";
+  }
+
+  function homeAdBlock() {
+    return avisosBand("portada", "Anunciantes de portada");
+  }
+
   function shareSet(title, url, extra) {
     const line = extra || C.nombre + " · Edición " + D.edicion.numero;
     const text = title + "\n" + line + "\n" + url;
@@ -172,7 +294,7 @@
       D.edicion.anio +
       " " +
       C.nombre +
-      " · Podés subir esta carpeta a cualquier hosting. Cambiá los datos en js/config.js</div>" +
+      "</div>" +
       "</div></footer>"
     );
   }
@@ -404,13 +526,7 @@
       '<div class="grid-cards">' +
       dest.map(card).join("") +
       "</div></div></section>" +
-      '<section class="section"><div class="ad"><div class="ad-label">Espacio del anunciante</div><strong>' +
-      (C.anuncioPortada && C.anuncioPortada.nombre ? C.anuncioPortada.nombre : "Tu comercio acá") +
-      "</strong><p>" +
-      (C.anuncioPortada && C.anuncioPortada.texto
-        ? C.anuncioPortada.texto
-        : "Publicá el tuyo en la próxima edición.") +
-      '</p><div class="actions"><a class="btn btn-ink" href="anunciantes.html">Quiero anunciar</a></div></div></section>' +
+      homeAdBlock() +
       '<section class="section"><div class="section-head"><h2>Secciones</h2></div><div class="grid-3 section-tiles">' +
       D.secciones
         .map(function (s) {
@@ -425,13 +541,17 @@
         })
         .join("") +
       "</div></section>" +
+      avisosBand("comercios", "Avisos en Comercios") +
       '<section class="section"><div class="section-head"><h2>Profesionales de la semana</h2><a href="profesionales.html">Buscador</a></div><div class="grid-cards">' +
       pros
         .map(function (p) {
           return proCard(p);
         })
         .join("") +
-      "</div></section></div>";
+      "</div></section>" +
+      avisosBand("profesionales", "Avisos en Profesionales") +
+      avisosBand("clasificados", "Avisos en Clasificados") +
+      "</div>";
   }
 
   function contactRow(item, waText) {
@@ -569,7 +689,8 @@
           return "<option>" + r + "</option>";
         })
         .join("") +
-      '</select></div><div id="lista" class="grid-cards"></div></div>';
+      '</select></div><div id="lista" class="grid-cards"></div></div>' +
+      avisosWrap("comercios", "Avisos en esta sección");
 
     function paint() {
       const q = document.getElementById("q").value.toLowerCase();
@@ -599,7 +720,8 @@
           return "<option>" + r + "</option>";
         })
         .join("") +
-      '</select></div><div id="lista" class="grid-cards"></div></div>';
+      '</select></div><div id="lista" class="grid-cards"></div></div>' +
+      avisosWrap("profesionales", "Avisos en esta sección");
 
     function paint() {
       const q = document.getElementById("q").value.toLowerCase();
@@ -622,13 +744,17 @@
     root.innerHTML =
       '<div class="wrap page-hero"><p class="kicker">Avisos de vecinos</p><h1>Clasificados</h1><p>Alquileres, ventas, empleos y servicios. Un aviso corto que se lee en el celular y se reenvía.</p>' +
       '<div class="actions"><a class="btn btn-ink" href="contacto.html">Publicar un clasificado</a></div></div>' +
+      '<div class="wrap">' +
+      avisosMarkup(avisosConImagen(), "Anunciante en Clasificados") +
+      "</div>" +
       '<div class="wrap section"><div class="filters"><select id="tipo"><option value="">Todos</option>' +
       tipos
         .map(function (t) {
           return "<option>" + t + "</option>";
         })
         .join("") +
-      '</select></div><div id="lista" class="grid-cards"></div></div>';
+      '</select></div><div id="lista" class="grid-cards"></div></div>' +
+      avisosWrapEjemplos("clasificados", "Espacios de clasificados");
 
     function paint() {
       const t = document.getElementById("tipo").value;
@@ -679,15 +805,19 @@
           );
         })
         .join("") +
-      "</div></div>";
+      "</div></div>" +
+      avisosWrap("eventos", "Avisos en Agenda");
   }
 
   function renderAnunciantes() {
     const root = document.getElementById("page");
     const url = abs("anunciantes.html");
     root.innerHTML =
-      '<div class="wrap page-hero"><p class="kicker">Para comercios y profesionales</p><h1>Anunciá donde el barrio reenvía</h1><p>La revista se publica en el hosting y se reparte por WhatsApp, email e Instagram. Tu aviso no se queda quieto: se comparte.</p>' +
+      '<div class="wrap page-hero"><p class="kicker">Para comercios y profesionales</p><h1>Anunciá donde el barrio reenvía</h1><p>Hay tres lugares de portada y un banner en cada sección. Abajo hay ejemplos reales del barrio y espacios libres para reservar.</p>' +
       shareSet("Quiero anunciar en " + C.nombre, url, "Paquetes para comercios y profesionales") +
+      "</div>" +
+      '<div class="wrap">' +
+      avisosMarkup(avisosConImagen(), "Anunciante de esta edición") +
       "</div>" +
       '<div class="wrap section"><div class="grid-cards">' +
       D.paquetes
@@ -710,6 +840,12 @@
         })
         .join("") +
       "</div></div>" +
+      avisosWrapEjemplos("portada", "Portada") +
+      avisosWrapEjemplos("actualidad", "Actualidad") +
+      avisosWrapEjemplos("comercios", "Comercios") +
+      avisosWrapEjemplos("profesionales", "Profesionales") +
+      avisosWrap("clasificados", "Clasificados") +
+      avisosWrapEjemplos("eventos", "Agenda") +
       '<div class="wrap section"><div class="section-head"><h2>En esta edición anuncian</h2></div><div class="grid-4">' +
       D.anunciantes
         .map(function (a) {
@@ -784,7 +920,7 @@
       '<div class="actions"><button type="button" class="btn btn-line" onclick="window.print()">Imprimir / guardar PDF</button></div></div>' +
       '<div class="wrap section">' +
       D.articulos
-        .map(function (a) {
+        .map(function (a, i) {
           return (
             '<article class="edition-sheet">' +
             '<p class="kicker">' +
@@ -805,7 +941,8 @@
             a.tiempo +
             ' · <a href="articulo.html?id=' +
             a.id +
-            '">Abrir nota</a></div></article>'
+            '">Abrir nota</a></div></article>' +
+            editionAdAfter(i, a)
           );
         })
         .join("") +
@@ -826,7 +963,9 @@
       "</h1><p>Notas de la edición, historias de barrio y la oficina comercial.</p></div>" +
       '<div class="wrap section"><div class="grid-cards">' +
       rest.map(card).join("") +
-      '</div></div><div class="wrap section" id="barrio"><div class="section-head"><h2>Barrio</h2></div><div class="grid-cards">' +
+      "</div></div>" +
+      avisosWrap("actualidad", "Avisos en Actualidad") +
+      '<div class="wrap section" id="barrio"><div class="section-head"><h2>Barrio</h2></div><div class="grid-cards">' +
       barrio.map(card).join("") +
       "</div></div>";
   }
@@ -867,6 +1006,7 @@
           return '<p><a href="articulo.html?id=' + a.id + '">' + a.titulo + "</a></p>";
         })
         .join("") +
+      (avisosSidebar(art) ? "<hr>" + avisosSidebar(art) : "") +
       '<hr><p class="muted">¿Querés anunciar al lado de esta nota?</p><a class="btn btn-ink" href="anunciantes.html">Ver paquetes</a></aside></div>';
   }
 

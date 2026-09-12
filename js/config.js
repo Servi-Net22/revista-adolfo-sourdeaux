@@ -14,7 +14,7 @@ window.REVISTA_CONFIG = {
   telefono: "(11) 1234-5678",
   suscribirUrl: "api/suscribir.php",
   anuncioPortada: {
-    nombre: "Farmacia Álvarez",
-    texto: "Rosario 4605, Ing. Adolfo Sourdeaux. Obras sociales, medicamentos y perfumería. WhatsApp 11 2889-6715.",
+    nombre: "Servi-Net",
+    texto: "Tecnología para impulsar y proteger tu empresa. Redes, servidores, ciberseguridad y desarrollo web. 11 4030-6408 · servi-net.com.ar",
   },
 };
