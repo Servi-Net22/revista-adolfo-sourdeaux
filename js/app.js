@@ -536,6 +536,7 @@
       '<div class="actions">' +
       '<a class="btn" href="edicion.html">Leer la edición</a>' +
       '<a class="btn btn-ghost" href="recibir.html">Recibir por mail o WhatsApp</a>' +
+      '<a class="btn btn-ghost" href="indice.html">Índice del Km 30</a>' +
       "</div>" +
       shareSet(C.nombre + " · " + ed.titulo, urlEdicion, C.lugar) +
       '</div><div class="cover-art" aria-hidden="true"></div></section>' +
@@ -560,6 +561,24 @@
         })
         .join("") +
       "</div></section>" +
+      '<section class="section"><div class="section-head"><h2>Índice del Km 30</h2><a href="indice.html">Ver A–Z</a></div>' +
+      '<div class="indice-preview">' +
+      entriesIndice()
+        .slice(0, 8)
+        .map(function (a) {
+          return (
+            '<a class="indice-preview-row" href="indice.html">' +
+            "<strong>" +
+            a.nombre +
+            "</strong><span>" +
+            a.rubro +
+            " · " +
+            a.seccion +
+            "</span></a>"
+          );
+        })
+        .join("") +
+      "</div></section>" +
       '<section class="section"><div class="section-head"><h2>Comercios destacados</h2><a href="comercios.html">Guía completa</a></div><div class="grid-cards">' +
       comercios
         .map(function (c) {
@@ -567,17 +586,13 @@
         })
         .join("") +
       "</div></section>" +
-      avisosBand("comercios", "Avisos en Comercios") +
       '<section class="section"><div class="section-head"><h2>Profesionales de la semana</h2><a href="profesionales.html">Buscador</a></div><div class="grid-cards">' +
       pros
         .map(function (p) {
           return proCard(p);
         })
         .join("") +
-      "</div></section>" +
-      avisosBand("profesionales", "Avisos en Profesionales") +
-      avisosBand("clasificados", "Avisos en Clasificados") +
-      "</div>";
+      "</div></section></div>";
   }
 
   function contactRow(item, waText) {
@@ -768,7 +783,7 @@
     const root = document.getElementById("page");
     const tipos = unique(D.clasificados, "tipo");
     root.innerHTML =
-      '<div class="wrap page-hero"><p class="kicker">Avisos de vecinos</p><h1>Clasificados</h1><p>Alquileres, ventas, empleos y servicios. La grilla tiene tres tamaños: banner ancho, módulo doble y módulo simple.</p>' +
+      '<div class="wrap page-hero"><p class="kicker">Avisos de vecinos</p><h1>Clasificados</h1><p>Como en el papel, con el orden del Km 30: Se busca, Alquiler, Venta, Empleo y Servicio. Arriba, la grilla de módulos. Abajo, los avisos de vecinos.</p>' +
       '<div class="actions"><a class="btn btn-ink" href="contacto.html">Publicar un clasificado</a></div></div>' +
       '<div class="wrap">' +
       avisosMosaico("clasificados", "Grilla de avisos") +
@@ -838,7 +853,8 @@
     const root = document.getElementById("page");
     const url = abs("anunciantes.html");
     root.innerHTML =
-      '<div class="wrap page-hero"><p class="kicker">Para comercios y profesionales</p><h1>Anunciá donde el barrio reenvía</h1><p>La grilla tiene tres tamaños: banner ancho, módulo doble y módulo simple. Abajo se ve cómo queda, con ejemplos del barrio y espacios libres.</p>' +
+      '<div class="wrap page-hero"><p class="kicker">Para comercios y profesionales</p><h1>Anunciá donde el barrio reenvía</h1><p>Clasificado de vidriera, ficha en el índice Km 30 o un módulo en la grilla. La revista se publica en el hosting y se reparte por WhatsApp y email.</p>' +
+      '<div class="actions"><a class="btn" href="indice.html">Índice del Km 30</a><a class="btn btn-ink" href="contacto.html">Pedir un espacio</a></div>' +
       shareSet("Quiero anunciar en " + C.nombre, url, "Paquetes para comercios y profesionales") +
       "</div>" +
       '<div class="wrap">' +
@@ -865,7 +881,7 @@
         })
         .join("") +
       "</div></div>" +
-      '<div class="wrap section"><div class="section-head"><h2>En esta edición anuncian</h2></div><div class="grid-4">' +
+      '<div class="wrap section"><div class="section-head"><h2>En esta edición anuncian</h2><a href="indice.html">Índice A–Z</a></div><div class="grid-4">' +
       D.anunciantes
         .map(function (a) {
           return (
@@ -875,7 +891,10 @@
             a.nombre +
             "</strong><p>" +
             a.rubro +
-            "</p></article>"
+            (a.seccion ? " · " + a.seccion : "") +
+            "</p>" +
+            (a.tel ? "<p>" + a.tel + "</p>" : "") +
+            "</article>"
           );
         })
         .join("") +
@@ -1110,6 +1129,160 @@
       "</div>";
   }
 
+  function entriesIndice() {
+    var seen = {};
+    var list = [];
+    function add(item) {
+      var key = norm(item.nombre);
+      if (!key || seen[key]) return;
+      seen[key] = true;
+      list.push(item);
+    }
+    (D.comercios || []).forEach(function (c) {
+      add({
+        nombre: c.nombre,
+        rubro: c.rubro,
+        seccion: "Comercios",
+        href: "comercios.html",
+        tel: c.tel || "",
+        wa: c.wa || "",
+        dest: !!c.dest,
+      });
+    });
+    (D.profesionales || []).forEach(function (p) {
+      add({
+        nombre: p.nombre,
+        rubro: p.oficio || p.rubro,
+        seccion: "Profesionales",
+        href: "profesionales.html",
+        tel: p.tel || "",
+        wa: p.wa || "",
+        dest: !!p.dest,
+      });
+    });
+    (D.anunciantes || []).forEach(function (a) {
+      add({
+        nombre: a.nombre,
+        rubro: a.rubro,
+        seccion: a.seccion || "Anunciantes",
+        href: "anunciantes.html",
+        tel: a.tel || "",
+        wa: "",
+        dest: a.tipo === "Banner" || a.tipo === "Destacado" || a.tipo === "Portada",
+      });
+    });
+    list.sort(function (a, b) {
+      return a.nombre.localeCompare(b.nombre, "es", { sensitivity: "base" });
+    });
+    return list;
+  }
+
+  function letraIndice(nombre) {
+    var n = norm(nombre).replace(/^(dra|dr|arq|estudio|ferreteria|hospital|panaderia|centro|unidad|carniceria)\.?\s+/, "");
+    var ch = (n.charAt(0) || "#").toUpperCase();
+    return /[A-Z]/.test(ch) ? ch : "#";
+  }
+
+  function renderIndice() {
+    const root = document.getElementById("page");
+    const todos = entriesIndice();
+    const rubros = unique(todos, "rubro");
+    const secciones = unique(todos, "seccion");
+    root.innerHTML =
+      '<div class="wrap page-hero"><p class="kicker">El padrón del barrio</p><h1>Índice del Km 30</h1><p>De la A a la Z: comercios de Rosario y Derqui, profesionales y quien anuncia en esta edición. Teléfono y sección a la vista, como en el índice de una revista de papel.</p>' +
+      '<div class="actions"><a class="btn btn-ink" href="anunciantes.html">Quiero entrar al índice</a></div></div>' +
+      '<div class="wrap section"><div class="filters">' +
+      '<input id="q" type="search" placeholder="Buscar nombre, rubro o teléfono">' +
+      '<select id="rubro"><option value="">Todos los rubros</option>' +
+      rubros
+        .map(function (r) {
+          return "<option>" + r + "</option>";
+        })
+        .join("") +
+      '</select><select id="seccion"><option value="">Todas las secciones</option>' +
+      secciones
+        .map(function (s) {
+          return "<option>" + s + "</option>";
+        })
+        .join("") +
+      '</select></div><nav class="indice-az" id="indice-az"></nav><div id="lista"></div></div>';
+
+    function paint() {
+      const q = document.getElementById("q").value;
+      const r = document.getElementById("rubro").value;
+      const s = document.getElementById("seccion").value;
+      const items = todos.filter(function (a) {
+        return (
+          (!r || a.rubro === r) &&
+          (!s || a.seccion === s) &&
+          coincide({ nombre: a.nombre, rubro: a.rubro, desc: a.seccion, dir: a.tel }, q)
+        );
+      });
+      var grupos = {};
+      items.forEach(function (a) {
+        var letra = letraIndice(a.nombre);
+        if (!grupos[letra]) grupos[letra] = [];
+        grupos[letra].push(a);
+      });
+      var letras = Object.keys(grupos).sort();
+      document.getElementById("indice-az").innerHTML = letras
+        .map(function (l) {
+          return '<a href="#letra-' + l + '">' + l + "</a>";
+        })
+        .join("");
+      document.getElementById("lista").innerHTML = items.length
+        ? letras
+            .map(function (l) {
+              return (
+                '<section class="indice-block" id="letra-' +
+                l +
+                '"><h2>' +
+                l +
+                "</h2>" +
+                grupos[l]
+                  .map(function (a) {
+                    var tel = a.tel
+                      ? '<a href="tel:' + a.tel.replace(/\s/g, "") + '">' + a.tel + "</a>"
+                      : "";
+                    var wa = a.wa
+                      ? '<a class="btn btn-wa" target="_blank" rel="noopener" href="' +
+                        waLink(a.wa, "Hola, los vi en el índice de " + C.nombre) +
+                        '">WhatsApp</a>'
+                      : "";
+                    return (
+                      '<article class="indice-row">' +
+                      '<div class="indice-who"><strong>' +
+                      a.nombre +
+                      "</strong>" +
+                      (a.dest ? '<span class="badge badge-hot">Destacado</span>' : "") +
+                      "</div>" +
+                      '<span class="indice-lead" aria-hidden="true"></span>' +
+                      '<div class="indice-meta">' +
+                      a.rubro +
+                      " · <a href='" +
+                      a.href +
+                      "'>" +
+                      a.seccion +
+                      "</a>" +
+                      (tel ? " · " + tel : "") +
+                      "</div>" +
+                      (wa ? '<div class="indice-wa">' + wa + "</div>" : "") +
+                      "</article>"
+                    );
+                  })
+                  .join("") +
+                "</section>"
+              );
+            })
+            .join("")
+        : '<div class="empty">Nadie coincide. Probá otra palabra o publicá tu ficha.</div>';
+    }
+    document.getElementById("q").addEventListener("input", paint);
+    document.getElementById("rubro").addEventListener("change", paint);
+    document.getElementById("seccion").addEventListener("change", paint);
+    paint();
+  }
+
   const pages = {
     home: renderHome,
     edicion: renderEdicion,
@@ -1120,6 +1293,7 @@
     clasificados: renderClasificados,
     eventos: renderEventos,
     anunciantes: renderAnunciantes,
+    indice: renderIndice,
     contacto: renderContacto,
     difundir: renderDifundir,
     recibir: renderRecibir,
