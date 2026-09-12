@@ -116,15 +116,16 @@
 
   function adCard(aviso) {
     if (!aviso) return "";
-    var label = "Espacio del anunciante";
-    if (aviso.tipo) label += " · " + aviso.tipo;
+    var label = aviso.tipo || "Espacio";
+    if (aviso.precio) label += " · " + aviso.precio;
     if (aviso.ejemplo) label += " · Ejemplo";
-    if (aviso.vacante) label += " · Disponible";
+    if (aviso.vacante) label += " · Libre";
     var size = aviso.tamano || (aviso.imagen ? "banner" : "simple");
     var cls = "ad ad-tam-" + size;
     if (aviso.imagen) cls += " ad-visual";
     if (aviso.ejemplo) cls += " ad-ejemplo";
     if (aviso.vacante) cls += " ad-vacante";
+    if (aviso.invertido) cls += " ad-ink";
     var body = "";
     if (aviso.imagen) {
       var img =
@@ -139,6 +140,7 @@
     } else {
       body = "<strong>" + aviso.nombre + "</strong><p>" + (aviso.texto || "") + "</p>";
       if (aviso.dato) body += '<div class="meta">' + aviso.dato + "</div>";
+      if (aviso.precio && aviso.vacante) body += '<div class="ad-precio">' + aviso.precio + "</div>";
       if (aviso.vacante || aviso.cta) {
         body +=
           '<div class="actions ad-cta"><a class="btn btn-ink" href="' +
@@ -173,7 +175,6 @@
 
   function avisosDeMosaico(pagina) {
     return avisosList().filter(function (a) {
-      if (a.fijo) return false;
       if (!a.mosaico) return false;
       if (a.mosaico === true) return true;
       if (typeof a.mosaico === "string") return a.mosaico === pagina;
@@ -190,7 +191,7 @@
     return (
       '<section class="section ad-section">' +
       head +
-      '<p class="muted ad-mosaico-leyenda">Banner ancho, módulo doble y módulo simple. Los ejemplos muestran el formato; los disponibles se pueden pedir.</p>' +
+      '<p class="muted ad-mosaico-leyenda">Como en el papel: mini (Valor 1), 1/4 (Valor 2), alto (Valor 3), media página (Valor 4), 1/2 alto (Valor 5) y banner (Valor 6). Hay avisos reales, ejemplos y recuadros en blanco.</p>' +
       '<div class="ad-mosaico">' +
       list.map(adCard).join("") +
       "</div></section>"
@@ -780,7 +781,10 @@
     const root = document.getElementById("page");
     const rubros = unique(D.profesionales, "rubro");
     root.innerHTML =
-      '<div class="wrap page-hero"><p class="kicker">Buscador</p><h1>Profesionales del barrio</h1><p>Médicos, estudios, oficios y clases. Filtrá por especialidad o escribí un nombre. El contacto sale directo a WhatsApp.</p></div>' +
+      '<div class="wrap page-hero"><p class="kicker">Buscador</p><h1>Profesionales del barrio</h1><p>Médicos, estudios, oficios y clases. Arriba, la página de recuadros. Abajo, el padrón para filtrar.</p></div>' +
+      '<div class="wrap">' +
+      avisosMosaico("profesionales", "Página de profesionales") +
+      "</div>" +
       '<div class="wrap section"><div class="filters">' +
       '<input id="q" type="search" placeholder="Buscar por nombre, oficio o zona">' +
       '<select id="rubro"><option value="">Todas las categorías</option>' +
@@ -789,8 +793,7 @@
           return "<option>" + r + "</option>";
         })
         .join("") +
-      '</select></div><div id="lista" class="grid-cards"></div></div>' +
-      avisosWrap("profesionales", "Avisos en esta sección");
+      '</select></div><div id="lista" class="grid-cards"></div></div>';
 
     function paint() {
       const q = document.getElementById("q").value.toLowerCase();
@@ -811,7 +814,7 @@
     const root = document.getElementById("page");
     const tipos = unique(D.clasificados, "tipo");
     root.innerHTML =
-      '<div class="wrap page-hero"><p class="kicker">Avisos de vecinos</p><h1>Clasificados</h1><p>Como en el papel, con el orden del Km 30: Se busca, Alquiler, Venta, Empleo y Servicio. Arriba, la grilla de módulos. Abajo, los avisos de vecinos.</p>' +
+      '<div class="wrap page-hero"><p class="kicker">Avisos de vecinos</p><h1>Clasificados</h1><p>Como en el papel: recuadros de distintos tamaños y valores. Arriba, la página de avisos. Abajo, los clasificados de vecinos.</p>' +
       '<div class="actions"><a class="btn btn-ink" href="contacto.html">Publicar un clasificado</a></div></div>' +
       '<div class="wrap">' +
       avisosMosaico("clasificados", "Grilla de avisos") +
@@ -881,7 +884,7 @@
     const root = document.getElementById("page");
     const url = abs("anunciantes.html");
     root.innerHTML =
-      '<div class="wrap page-hero"><p class="kicker">Para comercios y profesionales</p><h1>Anunciá donde el barrio reenvía</h1><p>Clasificado de vidriera, ficha en el índice Km 30 o un módulo en la grilla. La revista se publica en el hosting y se reparte por WhatsApp y email.</p>' +
+      '<div class="wrap page-hero"><p class="kicker">Para comercios y profesionales</p><h1>Anunciá donde el barrio reenvía</h1><p>Seis tamaños, de mini a banner, cada uno con su valor. En la grilla hay avisos reales del Km 30, ejemplos y espacios en blanco para reservar.</p>' +
       '<div class="actions"><a class="btn" href="indice.html">Índice del Km 30</a><a class="btn btn-ink" href="contacto.html">Pedir un espacio</a></div>' +
       shareSet("Quiero anunciar en " + C.nombre, url, "Paquetes para comercios y profesionales") +
       "</div>" +

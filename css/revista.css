@@ -443,32 +443,75 @@ button, input, select, textarea { font: inherit; }
 .ad-mosaico {
   display: grid;
   grid-template-columns: repeat(4, minmax(0, 1fr));
-  gap: 0.85rem;
+  grid-auto-rows: minmax(128px, auto);
+  grid-auto-flow: dense;
+  gap: 0.4rem;
   align-items: stretch;
+  background: var(--forest);
+  padding: 0.4rem;
 }
 
 .ad-mosaico .ad {
   margin: 0;
   min-height: 100%;
+  border: 0;
+  background: var(--card);
+  padding: 0.8rem 0.85rem;
 }
 
 .ad-mosaico .ad-visual {
   max-width: none;
   margin-inline: 0;
   justify-items: stretch;
+  padding: 0.45rem;
+  background: #071428;
+}
+
+.ad-mosaico .ad-visual .ad-label {
+  color: rgba(244, 238, 228, 0.7);
 }
 
 .ad-mosaico .ad-visual img {
-  max-width: 420px;
-  margin-inline: auto;
+  max-width: none;
+  width: 100%;
+  height: auto;
+  margin-inline: 0;
 }
 
 .ad-tam-banner { grid-column: span 4; }
+.ad-tam-cuadrado { grid-column: span 2; grid-row: span 2; }
 .ad-tam-doble { grid-column: span 2; }
+.ad-tam-alto { grid-column: span 1; grid-row: span 2; }
 .ad-tam-simple { grid-column: span 1; }
+.ad-tam-mini { grid-column: span 1; min-height: 0; }
 
-.ad-tam-simple strong { font-size: 1.15rem; }
-.ad-tam-simple p { font-size: 0.95rem; }
+.ad-tam-simple strong,
+.ad-tam-mini strong { font-size: 1.12rem; }
+.ad-tam-simple p,
+.ad-tam-mini p { font-size: 0.92rem; }
+.ad-tam-alto strong { font-size: 1.35rem; }
+
+.ad-precio {
+  font-family: var(--sans);
+  font-size: 0.78rem;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+  color: var(--clay);
+}
+
+.ad-ink {
+  background: var(--forest) !important;
+  color: #f4eee4;
+}
+
+.ad-ink .ad-label,
+.ad-ink .meta,
+.ad-ink .ad-precio { color: var(--gold-2); }
+
+.ad-ink .btn-ink {
+  background: #f4eee4;
+  color: var(--forest);
+}
 
 .ad-ejemplo {
   background: var(--card);
@@ -479,7 +522,12 @@ button, input, select, textarea { font: inherit; }
 
 .ad-vacante {
   min-height: 100%;
+  background: #fff !important;
+  color: var(--ink-3);
 }
+
+.ad-vacante strong { color: var(--ink-2); }
+.ad-vacante .ad-label { color: var(--ink-3); }
 
 .edition-sheet + .ad-section,
 .ad-section + .edition-sheet { margin-top: 1.2rem; }
@@ -878,12 +926,30 @@ button, input, select, textarea { font: inherit; }
     grid-template-columns: repeat(2, minmax(0, 1fr));
   }
   .ad-tam-banner { grid-column: span 2; }
+  .ad-tam-cuadrado,
   .ad-tam-doble { grid-column: span 2; }
-  .ad-tam-simple { grid-column: span 1; }
+  .ad-tam-alto { grid-column: span 1; grid-row: span 2; }
+  .ad-tam-simple,
+  .ad-tam-mini { grid-column: span 1; }
   .nav-toggle { display: inline-flex; align-self: center; }
   .nav { display: none; }
   .nav.open { display: flex; justify-content: flex-start; }
   .cover-art { min-height: 220px; }
+}
+
+@media (max-width: 560px) {
+  .ad-mosaico {
+    grid-template-columns: 1fr;
+  }
+  .ad-tam-banner,
+  .ad-tam-cuadrado,
+  .ad-tam-doble,
+  .ad-tam-alto,
+  .ad-tam-simple,
+  .ad-tam-mini {
+    grid-column: span 1;
+    grid-row: span 1;
+  }
 }
 
 @media print {
