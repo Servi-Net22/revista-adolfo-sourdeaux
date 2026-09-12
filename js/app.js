@@ -744,10 +744,7 @@
     root.innerHTML =
       '<div class="wrap page-hero"><p class="kicker">Avisos de vecinos</p><h1>Clasificados</h1><p>Alquileres, ventas, empleos y servicios. Un aviso corto que se lee en el celular y se reenvía.</p>' +
       '<div class="actions"><a class="btn btn-ink" href="contacto.html">Publicar un clasificado</a></div></div>' +
-      '<div class="wrap">' +
-      avisosMarkup(avisosConImagen(), "Anunciante en Clasificados") +
-      "</div>" +
-      '<div class="wrap section"><div class="filters"><select id="tipo"><option value="">Todos</option>' +
+      '<div class="wrap section"><div class="filters"><select id="tipo"><option value="">Todos</option>'
       tipos
         .map(function (t) {
           return "<option>" + t + "</option>";
@@ -815,9 +812,6 @@
     root.innerHTML =
       '<div class="wrap page-hero"><p class="kicker">Para comercios y profesionales</p><h1>Anunciá donde el barrio reenvía</h1><p>Hay tres lugares de portada y un banner en cada sección. Abajo hay ejemplos reales del barrio y espacios libres para reservar.</p>' +
       shareSet("Quiero anunciar en " + C.nombre, url, "Paquetes para comercios y profesionales") +
-      "</div>" +
-      '<div class="wrap">' +
-      avisosMarkup(avisosConImagen(), "Anunciante de esta edición") +
       "</div>" +
       '<div class="wrap section"><div class="grid-cards">' +
       D.paquetes
