@@ -384,17 +384,22 @@ button, input, select, textarea { font: inherit; }
 .ad strong { font-family: var(--serif); font-size: 1.4rem; }
 
 .ad-visual {
-  padding: 0.75rem 0.8rem 0.85rem;
-  gap: 0.55rem;
+  padding: 0.55rem 0.6rem 0.65rem;
+  gap: 0.4rem;
+  max-width: 380px;
+  margin-inline: auto;
+  justify-items: center;
 }
 
 .ad-visual-link {
   display: block;
   line-height: 0;
+  width: 100%;
 }
 
 .ad-visual img {
   width: 100%;
+  max-width: 360px;
   height: auto;
   display: block;
   border-radius: 6px;
@@ -407,7 +412,9 @@ button, input, select, textarea { font: inherit; }
 
 .aviso-fijo {
   display: block;
-  padding-top: 1.2rem;
+  max-width: 380px;
+  margin-inline: auto;
+  padding-top: 1rem;
   padding-bottom: 0.2rem;
 }
 
