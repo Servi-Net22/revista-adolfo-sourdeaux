@@ -114,6 +114,42 @@
     return "portada";
   }
 
+  function adGrafico(aviso) {
+    var items = (aviso.items || [])
+      .map(function (i) {
+        return "<li>" + i + "</li>";
+      })
+      .join("");
+    var marca = aviso.marca || aviso.nombre || "";
+    var iniciales = aviso.marcaCorta || marca.replace(/[^A-Za-zÁÉÍÓÚáéíóú]/g, "").slice(0, 2).toUpperCase();
+    var titulo = aviso.titulo || aviso.texto || "";
+    var foot = "";
+    if (aviso.mail) foot += "<span>" + aviso.mail + "</span>";
+    if (aviso.dato) foot += "<span>" + aviso.dato + "</span>";
+    if (aviso.tel) foot += "<span>" + aviso.tel + "</span>";
+    if (aviso.web) foot += '<span class="ad-graf-pill">' + aviso.web + "</span>";
+    if (aviso.vacante && aviso.cta) {
+      foot += '<a class="ad-graf-pill" href="' + (aviso.href || "contacto.html") + '">' + aviso.cta + "</a>";
+    }
+    return (
+      '<div class="ad-graf">' +
+      '<div class="ad-graf-brand"><span class="ad-graf-mark">' +
+      iniciales +
+      "</span><strong>" +
+      marca +
+      "</strong>" +
+      (aviso.lema ? "<p>" + aviso.lema + "</p>" : "") +
+      "</div>" +
+      '<div class="ad-graf-copy"><h3>' +
+      titulo +
+      "</h3>" +
+      (items ? "<ul>" + items + "</ul>" : "") +
+      "</div>" +
+      (foot ? '<div class="ad-graf-foot">' + foot + "</div>" : "") +
+      "</div>"
+    );
+  }
+
   function adCard(aviso) {
     if (!aviso) return "";
     var label = aviso.tipo || "Espacio";
@@ -123,11 +159,14 @@
     var size = aviso.tamano || (aviso.imagen ? "banner" : "simple");
     var cls = "ad ad-tam-" + size;
     if (aviso.imagen) cls += " ad-visual";
+    if (aviso.grafico) cls += " ad-grafico";
     if (aviso.ejemplo) cls += " ad-ejemplo";
     if (aviso.vacante) cls += " ad-vacante";
     if (aviso.invertido) cls += " ad-ink";
     var body = "";
-    if (aviso.imagen) {
+    if (aviso.grafico) {
+      body = adGrafico(aviso);
+    } else if (aviso.imagen) {
       var img =
         '<img src="' +
         aviso.imagen +
@@ -191,7 +230,7 @@
     return (
       '<section class="section ad-section">' +
       head +
-      '<p class="muted ad-mosaico-leyenda">Como en el papel: mini (Valor 1), 1/4 (Valor 2), alto (Valor 3), media página (Valor 4), 1/2 alto (Valor 5) y banner (Valor 6). Hay avisos reales, ejemplos y recuadros en blanco.</p>' +
+      '<p class="muted ad-mosaico-leyenda">Como el aviso de Servi-Net: marca, servicios y teléfono. Mini (Valor 1) a banner (Valor 6). Hay piezas reales, ejemplos y recuadros libres.</p>' +
       '<div class="ad-mosaico">' +
       list.map(adCard).join("") +
       "</div></section>"
@@ -819,7 +858,7 @@
     const tipos = unique(D.clasificados, "tipo");
     const rubros = unique(D.profesionales, "rubro");
     root.innerHTML =
-      '<div class="wrap page-hero"><p class="kicker">Avisos del Km 30</p><h1>Clasificados y profesionales</h1><p>Como en el papel: primero la grilla de avisos, después la página de profesionales y, al final, los clasificados de vecinos.</p>' +
+      '<div class="wrap page-hero"><p class="kicker">Avisos del Km 30</p><h1>Clasificados y profesionales</h1><p>Los avisos se ven como el de Servi-Net: marca, servicios y teléfono. Después, la página de profesionales y los clasificados de vecinos.</p>' +
       '<div class="actions"><a class="btn" href="profesionales.html">Buscador de profesionales</a><a class="btn btn-ink" href="contacto.html">Publicar un aviso</a></div></div>' +
       '<div class="wrap">' +
       avisosMosaico("clasificados", "Grilla de avisos") +

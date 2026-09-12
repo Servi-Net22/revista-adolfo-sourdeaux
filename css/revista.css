@@ -529,6 +529,162 @@ button, input, select, textarea { font: inherit; }
 .ad-vacante strong { color: var(--ink-2); }
 .ad-vacante .ad-label { color: var(--ink-3); }
 
+.ad-mosaico .ad-grafico {
+  padding: 0;
+  background: #071428;
+  color: #f4eee4;
+  display: flex;
+  flex-direction: column;
+  overflow: hidden;
+}
+
+.ad-mosaico .ad-grafico .ad-label {
+  padding: 0.35rem 0.7rem 0;
+  color: rgba(244, 238, 228, 0.55);
+}
+
+.ad-graf {
+  display: grid;
+  grid-template-columns: 0.85fr 1.35fr;
+  grid-template-rows: 1fr auto;
+  flex: 1;
+  min-height: 0;
+}
+
+.ad-graf-brand {
+  padding: 0.7rem 0.85rem 0.85rem;
+  border-right: 1px solid rgba(244, 238, 228, 0.12);
+  display: flex;
+  flex-direction: column;
+  gap: 0.35rem;
+}
+
+.ad-graf-mark {
+  width: 2.4rem;
+  height: 2.4rem;
+  border-radius: 0.55rem;
+  background: #10203c;
+  color: var(--gold-2);
+  display: grid;
+  place-items: center;
+  font-family: var(--sans);
+  font-size: 0.78rem;
+  font-weight: 600;
+  letter-spacing: 0.06em;
+}
+
+.ad-graf-brand strong {
+  font-family: var(--sans);
+  font-size: 0.95rem;
+  letter-spacing: 0.04em;
+  text-transform: uppercase;
+  line-height: 1.2;
+}
+
+.ad-graf-brand p {
+  margin: 0;
+  color: rgba(244, 238, 228, 0.72);
+  font-size: 0.82rem;
+}
+
+.ad-graf-copy {
+  padding: 0.75rem 0.9rem 0.85rem;
+}
+
+.ad-graf-copy h3 {
+  margin: 0 0 0.45rem;
+  font-family: var(--serif);
+  font-size: 1.15rem;
+  font-weight: 560;
+  line-height: 1.2;
+  color: #fff8ee;
+}
+
+.ad-graf-copy ul {
+  margin: 0;
+  padding: 0;
+  list-style: none;
+  display: grid;
+  gap: 0.28rem;
+}
+
+.ad-graf-copy li {
+  position: relative;
+  padding-left: 1.15rem;
+  font-size: 0.88rem;
+  line-height: 1.3;
+  color: rgba(244, 238, 228, 0.9);
+}
+
+.ad-graf-copy li::before {
+  content: "";
+  position: absolute;
+  left: 0;
+  top: 0.35rem;
+  width: 0.55rem;
+  height: 0.55rem;
+  border-radius: 50%;
+  background: #3ecf8e;
+  box-shadow: inset 0 0 0 2px #071428;
+}
+
+.ad-graf-foot {
+  grid-column: 1 / -1;
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  justify-content: space-between;
+  gap: 0.4rem 0.75rem;
+  padding: 0.5rem 0.85rem;
+  background: #050d1a;
+  font-family: var(--sans);
+  font-size: 0.78rem;
+  color: rgba(244, 238, 228, 0.82);
+}
+
+.ad-graf-pill {
+  display: inline-flex;
+  align-items: center;
+  background: #3ecf8e;
+  color: #071428;
+  border-radius: 999px;
+  padding: 0.22rem 0.7rem;
+  text-decoration: none;
+  font-weight: 600;
+}
+
+.ad-tam-simple .ad-graf,
+.ad-tam-mini .ad-graf,
+.ad-tam-alto .ad-graf {
+  grid-template-columns: 1fr;
+}
+
+.ad-tam-simple .ad-graf-brand,
+.ad-tam-mini .ad-graf-brand,
+.ad-tam-alto .ad-graf-brand {
+  border-right: 0;
+  border-bottom: 1px solid rgba(244, 238, 228, 0.12);
+}
+
+.ad-tam-mini .ad-graf-copy h3 { font-size: 0.98rem; }
+.ad-tam-mini .ad-graf-copy ul { display: none; }
+.ad-tam-simple .ad-graf-copy h3 { font-size: 1.05rem; }
+.ad-tam-banner .ad-graf-copy h3 { font-size: 1.45rem; }
+
+.ad-mosaico .ad-grafico.ad-vacante {
+  background: #071428 !important;
+  color: #f4eee4;
+}
+
+.ad-mosaico .ad-grafico.ad-vacante .ad-graf {
+  opacity: 0.78;
+}
+
+.ad-mosaico .ad-grafico.ad-vacante .ad-graf-copy h3,
+.ad-mosaico .ad-grafico.ad-vacante .ad-graf-brand strong {
+  color: rgba(244, 238, 228, 0.7);
+}
+
 .edition-sheet + .ad-section,
 .ad-section + .edition-sheet { margin-top: 1.2rem; }
 
