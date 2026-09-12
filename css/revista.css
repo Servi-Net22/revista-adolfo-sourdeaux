@@ -211,6 +211,8 @@ button, input, select, textarea { font: inherit; }
 
 .cover-art {
   position: relative;
+  min-height: 280px;
+  overflow: hidden;
   background:
     radial-gradient(circle at 30% 20%, #d46a3a 0 18%, transparent 19%),
     radial-gradient(circle at 78% 70%, #b8934a 0 14%, transparent 15%),
@@ -226,6 +228,15 @@ button, input, select, textarea { font: inherit; }
   font-size: clamp(6rem, 16vw, 12rem);
   line-height: 0.8;
   color: rgba(247, 240, 228, 0.1);
+  pointer-events: none;
+}
+
+.cover-photo {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
 }
 
 .actions { display: flex; flex-wrap: wrap; gap: 0.7rem; }
@@ -324,6 +335,24 @@ button, input, select, textarea { font: inherit; }
   min-height: 100%;
 }
 
+.card-media {
+  display: block;
+  margin: -1.15rem -1.2rem 0.35rem;
+  overflow: hidden;
+  min-height: 160px;
+  background: var(--forest);
+}
+
+.card-media img,
+.art-img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  display: block;
+}
+
+.card-media img { min-height: 160px; max-height: 200px; }
+
 .card h3, .note h3 {
   font-family: var(--serif);
   font-size: 1.28rem;
@@ -351,7 +380,9 @@ button, input, select, textarea { font: inherit; }
 }
 
 .feature-art {
+  position: relative;
   min-height: 280px;
+  overflow: hidden;
   background:
     linear-gradient(180deg, rgba(26, 39, 68, 0.1), rgba(26, 39, 68, 0.45)),
     repeating-linear-gradient(135deg, #2d4068 0 12px, #1a2744 12px 24px);
@@ -360,6 +391,28 @@ button, input, select, textarea { font: inherit; }
   display: flex;
   flex-direction: column;
   justify-content: flex-end;
+}
+
+.feature-photo {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
+
+.feature-art span,
+.feature-art strong {
+  position: relative;
+  z-index: 1;
+}
+
+.feature-art::before {
+  content: "";
+  position: absolute;
+  inset: 0;
+  background: linear-gradient(180deg, rgba(16, 24, 44, 0.1), rgba(16, 24, 44, 0.72));
+  z-index: 0;
 }
 
 .feature-art span { font-family: var(--sans); letter-spacing: 0.16em; text-transform: uppercase; font-size: 0.72rem; color: var(--gold-2); }
@@ -546,10 +599,25 @@ button, input, select, textarea { font: inherit; }
 .ad-graf {
   display: grid;
   grid-template-columns: 0.85fr 1.35fr;
-  grid-template-rows: 1fr auto;
+  grid-template-rows: auto 1fr auto;
   flex: 1;
   min-height: 0;
 }
+
+.ad-graf-foto {
+  grid-column: 1 / -1;
+  width: 100%;
+  height: 140px;
+  object-fit: cover;
+  display: block;
+  background: #10203c;
+}
+
+.ad-tam-doble .ad-graf-foto,
+.ad-tam-cuadrado .ad-graf-foto { height: 180px; }
+.ad-tam-alto .ad-graf-foto { height: 160px; }
+.ad-tam-banner .ad-graf-foto { height: 200px; }
+.ad-tam-mini .ad-graf-foto { height: 88px; }
 
 .ad-graf-brand {
   padding: 0.7rem 0.85rem 0.85rem;
@@ -803,6 +871,24 @@ button, input, select, textarea { font: inherit; }
   border: 1px solid var(--rule);
   padding: clamp(1.2rem, 3vw, 2.4rem);
   box-shadow: var(--shadow);
+}
+
+.edition-figure,
+.article-figure {
+  margin: 0 0 1.1rem;
+  overflow: hidden;
+}
+
+.edition-figure {
+  margin: -0.2rem -0.2rem 1.2rem;
+}
+
+.edition-figure img,
+.article-figure img {
+  width: 100%;
+  max-height: 420px;
+  object-fit: cover;
+  display: block;
 }
 
 .edition-sheet + .edition-sheet,

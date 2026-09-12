@@ -131,8 +131,16 @@
     if (aviso.vacante && aviso.cta) {
       foot += '<a class="ad-graf-pill" href="' + (aviso.href || "contacto.html") + '">' + aviso.cta + "</a>";
     }
+    var foto = aviso.foto
+      ? '<img class="ad-graf-foto" src="' +
+        aviso.foto +
+        '" alt="' +
+        (aviso.alt || aviso.nombre || "Aviso") +
+        '">'
+      : "";
     return (
       '<div class="ad-graf">' +
+      foto +
       '<div class="ad-graf-brand"><span class="ad-graf-mark">' +
       iniciales +
       "</span><strong>" +
@@ -552,11 +560,25 @@
     });
   }
 
+  function artImg(article, cls) {
+    if (!article || !article.imagen) return "";
+    return (
+      '<img class="' +
+      (cls || "art-img") +
+      '" src="' +
+      article.imagen +
+      '" alt="' +
+      (article.alt || article.titulo) +
+      '">'
+    );
+  }
+
   function card(article) {
     return (
       '<a class="card card-link" href="articulo.html?id=' +
       article.id +
       '">' +
+      (article.imagen ? '<span class="card-media">' + artImg(article) + "</span>" : "") +
       '<span class="kicker">' +
       article.kicker +
       "</span>" +
@@ -613,13 +635,19 @@
       '<a class="btn btn-ghost" href="indice.html">Índice del Km 30</a>' +
       "</div>" +
       shareSet(C.nombre + " · " + ed.titulo, urlEdicion, C.lugar) +
-      '</div><div class="cover-art" aria-hidden="true"></div></section>' +
+      '</div><div class="cover-art">' +
+      (cover.imagen
+        ? artImg(cover, "cover-photo")
+        : "") +
+      "</div></section>" +
       '<div class="wrap">' +
       '<section class="section"><div class="section-head"><h2>En esta edición</h2><a href="edicion.html">Ver todo</a></div>' +
       '<div class="feature">' +
       '<a class="feature-art" href="articulo.html?id=' +
       cover.id +
-      '"><span>' +
+      '">' +
+      artImg(cover, "feature-photo") +
+      "<span>" +
       cover.kicker +
       "</span><strong>" +
       cover.titulo +
@@ -1052,6 +1080,7 @@
         .map(function (a, i) {
           return (
             '<article class="edition-sheet">' +
+            (a.imagen ? '<figure class="edition-figure">' + artImg(a) + "</figure>" : "") +
             '<p class="kicker">' +
             a.kicker +
             "</p><h2>" +
@@ -1123,6 +1152,7 @@
       "</div>" +
       shareSet(art.titulo, url, C.nombre) +
       "</div>" +
+      (art.imagen ? '<div class="wrap"><figure class="article-figure">' + artImg(art) + "</figure></div>" : "") +
       '<div class="wrap article"><div class="article-body">' +
       art.cuerpo
         .map(function (p) {
