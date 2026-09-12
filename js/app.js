@@ -521,10 +521,16 @@
   function mountChrome() {
     document.body.insertAdjacentHTML("afterbegin", header());
     var page = document.body.getAttribute("data-page") || "";
-    var bannerPages = ["clasificados", "anunciantes"];
-    if (bannerPages.indexOf(page) !== -1 && !document.querySelector(".aviso-fijo")) {
+    if ((page === "clasificados" || page === "anunciantes") && !document.getElementById("grilla-fija")) {
       var main = document.getElementById("page");
-      if (main) main.insertAdjacentHTML("beforebegin", bannerFijoHTML());
+      if (main) {
+        main.insertAdjacentHTML(
+          "beforebegin",
+          '<div id="grilla-fija" class="wrap">' +
+            avisosMosaico(page === "anunciantes" ? "anunciantes" : "clasificados", "Avisos gráficos") +
+            "</div>"
+        );
+      }
     }
     if (page !== "recibir") {
       document.body.insertAdjacentHTML("beforeend", subscribeBand());
@@ -858,11 +864,8 @@
     const tipos = unique(D.clasificados, "tipo");
     const rubros = unique(D.profesionales, "rubro");
     root.innerHTML =
-      '<div class="wrap page-hero"><p class="kicker">Avisos del Km 30</p><h1>Clasificados y profesionales</h1><p>Los avisos se ven como el de Servi-Net: marca, servicios y teléfono. Después, la página de profesionales y los clasificados de vecinos.</p>' +
+      '<div class="wrap page-hero"><p class="kicker">Avisos del Km 30</p><h1>Clasificados y profesionales</h1><p>Arriba están los avisos gráficos, como el de Servi-Net. Abajo, los profesionales y los clasificados de vecinos.</p>' +
       '<div class="actions"><a class="btn" href="profesionales.html">Buscador de profesionales</a><a class="btn btn-ink" href="contacto.html">Publicar un aviso</a></div></div>' +
-      '<div class="wrap">' +
-      avisosMosaico("clasificados", "Grilla de avisos") +
-      "</div>" +
       '<div class="wrap">' +
       avisosMosaico("profesionales", "Página de profesionales") +
       "</div>" +
@@ -945,9 +948,9 @@
       '<div class="actions"><a class="btn" href="indice.html">Índice del Km 30</a><a class="btn btn-ink" href="contacto.html">Pedir un espacio</a></div>' +
       shareSet("Quiero anunciar en " + C.nombre, url, "Paquetes para comercios y profesionales") +
       "</div>" +
-      '<div class="wrap">' +
-      avisosMosaico("anunciantes", "Grilla de anunciantes") +
-      "</div>" +
+      (document.getElementById("grilla-fija")
+        ? ""
+        : '<div class="wrap">' + avisosMosaico("anunciantes", "Grilla de anunciantes") + "</div>") +
       '<div class="wrap section"><div class="grid-cards">' +
       D.paquetes
         .map(function (p) {
