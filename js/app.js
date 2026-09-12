@@ -482,7 +482,7 @@
   function mountChrome() {
     document.body.insertAdjacentHTML("afterbegin", header());
     var page = document.body.getAttribute("data-page") || "";
-    var bannerPages = ["home", "clasificados", "anunciantes", "indice"];
+    var bannerPages = ["clasificados", "anunciantes"];
     if (bannerPages.indexOf(page) !== -1 && !document.querySelector(".aviso-fijo")) {
       var main = document.getElementById("page");
       if (main) main.insertAdjacentHTML("beforebegin", bannerFijoHTML());
