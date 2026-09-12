@@ -456,6 +456,7 @@ window.REVISTA_DATA = {
       slots: ["portada", "clasificados"],
       mosaico: ["clasificados", "anunciantes"],
       tamano: "banner",
+      fijo: true,
       nombre: "Servi-Net",
       tipo: "Banner ancho",
       imagen: "img/avisos/servi-net.png",

@@ -73,6 +73,7 @@
 
   function avisosBySlot(slot) {
     return avisosList().filter(function (a) {
+      if (a.fijo) return false;
       if (a.slots && a.slots.length) return a.slots.indexOf(slot) !== -1;
       return a.slot === slot;
     });
@@ -82,6 +83,27 @@
     return avisosList().filter(function (a) {
       return a.imagen && !a.ejemplo;
     });
+  }
+
+  function avisoFijo() {
+    return avisosList().find(function (a) {
+      return a.fijo && a.imagen;
+    });
+  }
+
+  function bannerFijoHTML() {
+    var aviso = avisoFijo();
+    if (!aviso) return "";
+    var img =
+      '<img src="' +
+      aviso.imagen +
+      '" alt="' +
+      (aviso.alt || aviso.nombre || "Aviso publicitario") +
+      '" width="591" height="284">';
+    var inner = aviso.href
+      ? '<a class="ad-visual-link" href="' + aviso.href + '" target="_blank" rel="noopener">' + img + "</a>"
+      : img;
+    return '<aside class="aviso-fijo wrap" aria-label="' + (aviso.nombre || "Anunciante") + '">' + inner + "</aside>";
   }
 
   function slotForSeccion(seccion) {
@@ -132,10 +154,10 @@
   function avisosMarkup(list, title) {
     if (!list || !list.length) return "";
     var featured = list.filter(function (a) {
-      return a.imagen && !a.ejemplo;
+      return a.imagen && !a.ejemplo && !a.fijo;
     });
     var rest = list.filter(function (a) {
-      return featured.indexOf(a) === -1;
+      return featured.indexOf(a) === -1 && !a.fijo;
     });
     var head = title
       ? '<div class="section-head"><h2>' + title + '</h2><a href="anunciantes.html">Quiero anunciar</a></div>'
@@ -151,6 +173,7 @@
 
   function avisosDeMosaico(pagina) {
     return avisosList().filter(function (a) {
+      if (a.fijo) return false;
       if (!a.mosaico) return false;
       if (a.mosaico === true) return true;
       if (typeof a.mosaico === "string") return a.mosaico === pagina;
@@ -458,6 +481,11 @@
   function mountChrome() {
     document.body.insertAdjacentHTML("afterbegin", header());
     var page = document.body.getAttribute("data-page") || "";
+    var bannerPages = ["home", "clasificados", "anunciantes", "indice"];
+    if (bannerPages.indexOf(page) !== -1 && !document.querySelector(".aviso-fijo")) {
+      var main = document.getElementById("page");
+      if (main) main.insertAdjacentHTML("beforebegin", bannerFijoHTML());
+    }
     if (page !== "recibir") {
       document.body.insertAdjacentHTML("beforeend", subscribeBand());
     }
